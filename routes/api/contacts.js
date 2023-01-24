@@ -1,5 +1,5 @@
 const express = require("express");
-const {addContactValidation} = require('../../middlewares/validationMiddleware')
+const {addContactValidation, putContactValidation} = require('../../middlewares/validationMiddleware')
 const {
   listContacts,
   getContactById,
@@ -56,13 +56,12 @@ router.delete("/:contactId", async (req, res, next) => {
   }
 });
 
-router.put("/:contactId", addContactValidation, async (req, res, next) => {
+router.put("/:contactId", putContactValidation, async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const body = req.body;
     const updateCont = await updateContact(contactId, body);
     if(!updateCont) {
-      console.log(`this is IF, ${updateCont}`);
       res.status(404).json({ message: 'Not found' })
     }
     res.json(updateCont);

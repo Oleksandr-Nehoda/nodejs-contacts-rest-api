@@ -71,11 +71,13 @@ const updateContact = async (contactId, body) => {
     if (index === -1) {
       return null;
     }
-    contacts[index] = { id: contactId, ...body };
+    const contact = contacts[index];
+    const updateContact = {...contact, ...body}
+    contacts[index] = updateContact
     await fs.writeFile(contactsPath, JSON.stringify(contacts));
     return contacts[index];
   } catch (err) {
-    console.error(`This is catch error: ${err}`);
+    console.error(`This IS catch error: ${err}`);
   }
 };
 
