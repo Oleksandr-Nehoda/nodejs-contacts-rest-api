@@ -1,4 +1,5 @@
 const express = require("express");
+const {addContactValidation} = require('../../middlewares/validationMiddleware')
 const {
   listContacts,
   getContactById,
@@ -6,6 +7,7 @@ const {
   addContact,
   updateContact,
 } = require("../../models/contacts.js");
+
 
 const router = express.Router();
 
@@ -30,7 +32,7 @@ router.get("/:contactId", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", addContactValidation, async (req, res, next) => {
   try {
     const body = req.body;
     res.status(201);
@@ -54,7 +56,7 @@ router.delete("/:contactId", async (req, res, next) => {
   }
 });
 
-router.put("/:contactId", async (req, res, next) => {
+router.put("/:contactId", addContactValidation, async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const body = req.body;
