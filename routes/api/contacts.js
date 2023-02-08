@@ -1,73 +1,27 @@
 const express = require("express");
-const {addContactValidation, putContactValidation} = require('../../middlewares/validationMiddleware')
+const {addContactValidation, putContactValidation} = require('../../middlewares/validationMiddleware');
 const {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
+  getContacts, 
+  addContact, 
+  getContactById, 
+  removeContact, 
   updateContact,
-} = require("../../models/contacts.js");
+  updateStatusContact
+} = require('../../controllers/contactsController')
 
 
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
-  try {
-    res.json(await listContacts());
-  } catch (err) {
-    next(err);
-  }
-});
+router.get("/", getContacts );
+  
+ router.get("/:contactId", getContactById);
 
-router.get("/:contactId", async (req, res, next) => {
-  try {
-    const { contactId } = req.params;
-    const getContById = await getContactById(contactId)
-    if(!getContById) {
-      next()
-    }
-    res.json(getContById);
-  } catch (err) {
-    next(err);
-  }
-});
+router.post("/", addContactValidation, addContact);
 
-router.post("/", addContactValidation, async (req, res, next) => {
-  try {
-    const body = req.body;
-    res.status(201);
-    res.json(await addContact(body));
-  } catch (err) {
-    next(err);
-  }
-});
+router.delete("/:contactId", removeContact);
 
-router.delete("/:contactId", async (req, res, next) => {
-  try {
-    const { contactId } = req.params;
-    const removeCont = await removeContact(contactId);
-    if(!removeCont) {
-      next()
-    }
-    res.json(removeCont);
-  } catch (err) {
-    console.log(`this is catch, ${err}`);
-    next(err);
-  }
-});
+router.put("/:contactId", putContactValidation, updateContact);
 
-router.put("/:contactId", putContactValidation, async (req, res, next) => {
-  try {
-    const { contactId } = req.params;
-    const body = req.body;
-    const updateCont = await updateContact(contactId, body);
-    if(!updateCont) {
-      res.status(404).json({ message: 'Not found' })
-    }
-    res.json(updateCont);
-  } catch (err) {
-    next(err);
-  }
-});
+router.patch("/:contactId/favorite", putContactValidation, updateStatusContact);
 
 module.exports = router;

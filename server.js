@@ -12,6 +12,7 @@ const start = async () => {
     })
   } catch (err) {
 console.error(`Error function start`, err.message);
+process.exit(1);
   }
 }
 

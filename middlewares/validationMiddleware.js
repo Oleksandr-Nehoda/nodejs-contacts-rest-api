@@ -7,10 +7,11 @@ module.exports = {
             email: Joi.string()
               .email({
                 minDomainSegments: 2,
-                tlds: { allow: ["com", "net", "ua"] },
+                tlds: { allow: ["com", "net", "ua"] }
               })
               .required(),
             phone: Joi.string().required(),
+            favorite: Joi.bool()
           });
 
           const validationResult = schema.validate(req.body);
@@ -30,6 +31,7 @@ module.exports = {
               tlds: { allow: ["com", "net", "ua"] },
             }),
           phone: Joi.string(),
+          favorite: Joi.bool()
         });
 
         const validationResult = schema.validate(req.body);

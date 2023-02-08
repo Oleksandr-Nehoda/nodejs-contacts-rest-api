@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const DB_HOST = 'mongodb+srv://Oleksandr:Oleksandr@cluster0.mn1u4ye.mongodb.net/?retryWrites=true&w=majority'
+const DB_HOST = "mongodb+srv://Oleksandr:Oleksandr@cluster0.mn1u4ye.mongodb.net/db-contacts?retryWrites=true&w=majority";
 
 mongoose.Promise = global.Promise;
 mongoose.set('strictQuery', false);
@@ -11,7 +11,6 @@ const connectMongo = () => {
 ) 
 .catch ((err) => {
     console.error(`Error connectMongo:`, err.message);
-    process.exit(1);
 })
 }
 
