@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
-const DB_HOST = "mongodb+srv://Oleksandr:Oleksandr@cluster0.mn1u4ye.mongodb.net/db-contacts?retryWrites=true&w=majority";
+const dotenv = require('dotenv');
+
+dotenv.config();
+const {DB_HOST} = process.env;
 
 mongoose.Promise = global.Promise;
 mongoose.set('strictQuery', false);
@@ -13,6 +16,5 @@ const connectMongo = () => {
     console.error(`Error connectMongo:`, err.message);
 })
 }
-
 module.exports = {connectMongo};
 

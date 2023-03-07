@@ -4,7 +4,7 @@ const {
     add,
     removeById,
     updateById,
-} = require('../services');
+} = require('../services/contactServices');
 
 const getContacts = async (_, res, next) => {
   try {
@@ -86,13 +86,8 @@ const updateStatusContact = async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const body = req.body;
-    if (Object.keys(body).length === 0) {
-      res.status(400).json({
-        message: "missing field favorite",
-      });
-    }
     const result = await updateById(contactId, body);
-
+   
     if (result) {
       res.json({
         statuse: "saccess",
