@@ -4,8 +4,8 @@ const add = (body) => {
     return User.create({ ...body });
 }
 
-const findOne = (data) => {
-    return User.findOne({data});
+const findOne = (data) => { 
+    return User.findOne(data);
 }
 
 module.exports = {
