@@ -1,3 +1,4 @@
+const { Linter } = require('eslint');
 const {
     getAll, 
     getById,
@@ -6,9 +7,11 @@ const {
     updateById,
 } = require('../services/contactServices');
 
-const getContacts = async (_, res, next) => {
+const getContacts = async (req, res, next) => {
   try {
-    const results = await getAll();
+    const {_id} = req.user;
+    const {page = 1, limit = 20} = req.query;
+    const results = await getAll(_id, page, limit);
     res.json({
       statuse: "saccess",
       code: 200,
@@ -38,7 +41,8 @@ const getContactById = async (req, res, next) => {
 const addContact = async (req, res, next) => {
   try {
     const body = req.body;
-    const result = await add(body);
+    const {_id} = req.user;
+    const result = await add(body, _id);
     res.status(201).json({
       statuse: "saccess",
       code: 201,

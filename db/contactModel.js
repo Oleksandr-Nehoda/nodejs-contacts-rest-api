@@ -18,10 +18,10 @@ const contactSchema = new Schema (
           type: Boolean,
           default: false,
         },
-        // owner: {
-        //   type: SchemaTypes.ObjectId,
-        //   ref: 'users',
-        // }
+        owner: {
+          type: Schema.Types.ObjectId,
+          ref: 'user',
+        }
       }, {
 timestamps: true,
 versionKey: false

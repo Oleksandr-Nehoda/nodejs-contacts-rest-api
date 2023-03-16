@@ -18,7 +18,10 @@ const userSchema = Schema(
       enum: ["starter", "pro", "business"],
       default: "starter"
     },
-    token: String,
+    token: {
+      type: String,
+      default: null
+    },
   },
   {
     timestamps: true,
@@ -31,10 +34,6 @@ userSchema.pre('save', async function() {
   this.password = await bcrypt.hash(this.password, 8)
  }
 })
-
-// userSchema.methods.comparePassword =  function  (password) {
-// return bcrypt.compareSync(password, this.password)
-// }
 
 const joiUserRegisterSchema = Joi.object({
   password: Joi.string().required().min(6),
