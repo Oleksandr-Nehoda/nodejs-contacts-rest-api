@@ -72,9 +72,25 @@ try {
 }
 }
 
+const updateSubscription = async (req, res, next) => {
+try {
+  const {_id} = req.user;
+  const body = req.body;
+  const {subscription} = await updateById(_id, body);
+  res.json({
+    subscription
+  })
+} catch (err) {
+  console.log(`err in Controller`, err.message);
+  next(err);
+}
+}
+
+
 module.exports = {
   register,
   login,
   getCurrent,
-  logout
+  logout,
+  updateSubscription
 };

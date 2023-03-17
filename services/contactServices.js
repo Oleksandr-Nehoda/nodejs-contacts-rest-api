@@ -1,7 +1,7 @@
 const { Contact } = require("../db/contactModel");
 
-const getAll = (_id, page, limit) => {
-  return Contact.find({ owner: _id }, "", { limit: Number(limit) })
+const getAll = (_id, page, limit, favorite) => {
+  return Contact.find({ owner: _id, favorite }, "", { limit: Number(limit) })
     .skip(page > 0 ? (page - 1) * limit : 0)
     .populate("owner", "_id  email subscription");
 };

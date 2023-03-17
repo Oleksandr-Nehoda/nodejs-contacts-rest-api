@@ -10,8 +10,10 @@ const {
 const getContacts = async (req, res, next) => {
   try {
     const {_id} = req.user;
-    const {page = 1, limit = 20} = req.query;
-    const results = await getAll(_id, page, limit);
+    const {page = 1, limit = 20, favorite} = req.query;
+    console.log(favorite);
+    
+    const results = await getAll(_id, page, limit, favorite);
     res.json({
       statuse: "saccess",
       code: 200,
