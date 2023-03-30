@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
+const gravatar = require('gravatar')
 const { add, findOne, updateById } = require("../services/userServices");
 
 const {SECRET_KEY} = process.env;
@@ -7,11 +8,13 @@ const {SECRET_KEY} = process.env;
 const register = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const result = await add({email, password});
+    const avatarURL = gravatar.url(email);
+    const result = await add({email, password, avatarURL});
     res.status(201).json({
       user: { 
         email,
-        subscription: "starter"
+        subscription: "starter",
+        avatarURL
       },
     });
   } catch (err) {
