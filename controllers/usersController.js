@@ -1,6 +1,9 @@
+const path = require('path');
+const fs = require('fs/promises');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken')
-const gravatar = require('gravatar')
+const jwt = require('jsonwebtoken');
+const gravatar = require('gravatar');
+const Jimp = require("jimp");
 const { add, findOne, updateById } = require("../services/userServices");
 
 const {SECRET_KEY} = process.env;
@@ -89,11 +92,34 @@ try {
 }
 }
 
+const avatarsDir = path.join(__dirname, "../", "public", "avatars");
+
+const updateAvatar = async (req, res, next) => {
+  const {path: tmpUpload, originalname} = req.file;
+  const {_id} = req.user;
+  const imageName = `${_id}_${originalname}`;
+  try {
+    const resultUpload = path.join(avatarsDir, imageName);
+    const jimpAvatar = await Jimp.read(tmpUpload);
+    await jimpAvatar.resize(250, 250).write(resultUpload);
+    await fs.unlink(tmpUpload);
+    const avatarURL = path.join("public", "avatars", imageName);
+    await updateById(_id, {avatarURL});
+    res.json({avatarURL});
+
+  } catch (err) {
+    await fs.unlink(tmpUpload);
+    console.log(`err in Controller`, err.message);
+    next(err);
+  }
+
+}
 
 module.exports = {
   register,
   login,
   getCurrent,
   logout,
-  updateSubscription
+  updateSubscription,
+  updateAvatar
 };

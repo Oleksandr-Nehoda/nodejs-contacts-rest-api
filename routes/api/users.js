@@ -4,9 +4,10 @@ const {
   login,
   logout,
   getCurrent,
-  updateSubscription
+  updateSubscription,
+  updateAvatar 
 } = require("../../controllers/usersController");
-const { validation, verifyToken } = require("../../middlewares");
+const { validation, verifyToken, upload } = require("../../middlewares");
 const {
   joiUserRegisterSchema,
   joiUserLoginSchema,
@@ -24,5 +25,7 @@ router.post("/logout", verifyToken, logout);
 router.get("/current", verifyToken, getCurrent);
 
 router.patch("/", verifyToken, validation(joiSubscriptionSchema), updateSubscription)
+
+router.patch("/avatars", verifyToken, upload.single("avatar"),  updateAvatar)
 
 module.exports = router;
