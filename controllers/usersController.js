@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const gravatar = require('gravatar');
 const Jimp = require("jimp");
+const { v4: uuidv4 } = require('uuid');
+const sendEmail = require('../helpers/sendEmail');
 const { add, findOne, updateById } = require("../services/userServices");
 
 const {SECRET_KEY} = process.env;
@@ -12,7 +14,14 @@ const register = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const avatarURL = gravatar.url(email);
-    const result = await add({email, password, avatarURL});
+    const verificationToken = uuidv4()
+    const result = await add({email, password, avatarURL, verificationToken});
+    const mail =  {
+      to: email,
+      subject: "Confirm your email",
+      html: `<a href="http://localhost3001//users/verify/:${verificationToken}" target="_blank">Click on this link to finish registration </a>`
+    }
+    await sendEmail(mail);
     res.status(201).json({
       user: { 
         email,
@@ -25,6 +34,29 @@ const register = async (req, res, next) => {
     next(err);
   }
 };
+
+const verifyEmail = async (req, res, next) => {
+try {
+  const {verificationToken} = req.params;
+  const user = await findOne({verificationToken});
+  if (!user) {
+    res.status(404).json({
+      ResponseBody: {
+        message: 'User not found'
+      }
+    })
+  }
+await updateById(user._id, {verify: true, verificationToken: null});
+res.json({
+  ResponseBody: {
+    message: 'Verification successful',
+  }
+})
+} catch (err) {
+  console.log(`err in Controller`, err.message);
+    next(err);
+}
+}
 
 const login = async (req, res, next) => {
   try {
@@ -121,5 +153,6 @@ module.exports = {
   getCurrent,
   logout,
   updateSubscription,
-  updateAvatar
+  updateAvatar,
+  verifyEmail
 };

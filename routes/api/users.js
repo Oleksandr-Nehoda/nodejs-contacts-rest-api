@@ -5,7 +5,8 @@ const {
   logout,
   getCurrent,
   updateSubscription,
-  updateAvatar 
+  updateAvatar,
+  verifyEmail
 } = require("../../controllers/usersController");
 const { validation, verifyToken, upload } = require("../../middlewares");
 const {
@@ -17,6 +18,8 @@ const {
 const router = express.Router();
 
 router.post("/register", validation(joiUserRegisterSchema), register);
+
+router.get("/verify/:verificationToken", verifyEmail)
 
 router.get("/login", validation(joiUserLoginSchema), login);
 
