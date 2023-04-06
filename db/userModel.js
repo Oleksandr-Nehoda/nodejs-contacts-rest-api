@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 
-const emailRegExp = /^\w+@\w+\.\w+$/;
+const emailRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const userSchema = Schema(
   {
@@ -28,11 +28,11 @@ const userSchema = Schema(
     avatarURL: String,
     verify: {
       type: Boolean,
-      defaulte: false,
+      default: false,
     },
-    varificationToken: {
+    verificationToken: {
       type: String,
-      required: [true, 'Verify token is required'],
+      required: [true, "Verify token is required"],
     },
   },
   {
@@ -63,8 +63,8 @@ const joiSubscriptionSchema = Joi.object({
 });
 
 const joiVerifyEmailSchema = Joi.object({
-  email: Joi.string().required()
-})
+  email: Joi.string().required(),
+});
 
 const User = model("user", userSchema);
 
@@ -73,5 +73,5 @@ module.exports = {
   joiUserRegisterSchema,
   joiUserLoginSchema,
   joiSubscriptionSchema,
-  joiVerifyEmailSchema
+  joiVerifyEmailSchema,
 };
