@@ -52,10 +52,43 @@ res.json({
     message: 'Verification successful',
   }
 })
+
 } catch (err) {
   console.log(`err in Controller`, err.message);
     next(err);
 }
+}
+
+const resendVerifyEmail = async(req, res, next) => {
+  try {
+    const {email} = req.body;
+    const user = await findOne({email});
+    if(!user) {
+      res.status(404).json({
+        ResponseBody: {
+          message: 'User not found'
+        }
+      })
+    }
+    if(user.verify) {
+throw new Error("Verification has already been passed")
+    }
+    const mail =  {
+      to: email,
+      subject: "Confirm your email",
+      html: `<a href="http://localhost3001//users/verify/:${user.verificationToken}" target="_blank">Click on this link to finish registration </a>`
+    }
+    await sendEmail(mail);
+    res.json({
+      ResponseBody: {
+        message: 'Verification email sent'
+      }
+    })
+  } catch (err) {
+    console.log(`err in Controller`, err.message);
+    err.status = 400;
+    next(err);
+  }
 }
 
 const login = async (req, res, next) => {
@@ -154,5 +187,6 @@ module.exports = {
   logout,
   updateSubscription,
   updateAvatar,
-  verifyEmail
+  verifyEmail,
+  resendVerifyEmail
 };

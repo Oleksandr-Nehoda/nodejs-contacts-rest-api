@@ -6,20 +6,24 @@ const {
   getCurrent,
   updateSubscription,
   updateAvatar,
-  verifyEmail
+  verifyEmail,
+  resendVerifyEmail
 } = require("../../controllers/usersController");
 const { validation, verifyToken, upload } = require("../../middlewares");
 const {
   joiUserRegisterSchema,
   joiUserLoginSchema,
   joiSubscriptionSchema,
+  joiVerifyEmailSchema
 } = require("../../db/userModel");
 
 const router = express.Router();
 
 router.post("/register", validation(joiUserRegisterSchema), register);
 
-router.get("/verify/:verificationToken", verifyEmail)
+router.get("/verify/:verificationToken", verifyEmail);
+
+router.post("/verify", validation(joiVerifyEmailSchema), resendVerifyEmail)
 
 router.get("/login", validation(joiUserLoginSchema), login);
 
